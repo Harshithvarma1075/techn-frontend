@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import api from "../services/api";
 import TechCard from "../components/TechCard";
@@ -22,8 +22,16 @@ function Technologies() {
   const [level, setLevel] = useState("All");
   const [sort, setSort] = useState("");
   const [loading, setLoading] = useState(true);
-  const user = JSON.parse(localStorage.getItem("user"));
-  const learningQueue = useSelector((state) => state.learning);
+  const [user] = useState(() => JSON.parse(localStorage.getItem("user")));
+
+  const learningQueueIds = useSelector(
+    (state) => state.learning.map((tech) => tech.id)
+  );
+
+  const queueIdSet = useMemo(
+    () => new Set(learningQueueIds),
+    [learningQueueIds]
+  );
 
   const debouncedSearch = useDebounce(search, 300);
 
@@ -50,22 +58,10 @@ function Technologies() {
     return () => controller.abort();
   }, []);
 
-  async function deleteTechnology(id){
-
-  await api.delete(
-    `/technologies/${id}`
-  );
-
-  setTechnologies(
-
-    technologies.filter(
-      technology =>
-      technology.id !== id
-    )
-
-  );
-
-}
+  const deleteTechnology = useCallback(async (id) => {
+    await api.delete(`/technologies/${id}`);
+    setTechnologies((prev) => prev.filter((t) => t.id !== id));
+  }, []);
 
   const filteredTechnologies = useMemo(() => {
     return technologies.filter(technology => {
@@ -145,7 +141,7 @@ function Technologies() {
               technology={technology}
               onDelete={deleteTechnology}
               user={user}
-              isInQueue={learningQueue.some((tech) => tech.id === technology.id)}
+              isInQueue={queueIdSet.has(technology.id)}
             />
           ))
         )}

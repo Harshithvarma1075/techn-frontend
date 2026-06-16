@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addFavorite } from "../features/favouriteSlice";
@@ -8,32 +8,29 @@ const TechCard = memo(function TechCard({ technology, onDelete, user, isInQueue 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const requireLogin = () => {
+  const handleFavorite = useCallback(() => {
     if (!user) {
       navigate("/login");
-      return false;
+      return;
     }
-
-    return true;
-  };
-
-  const handleFavorite = () => {
-    if (!requireLogin()) return;
-
     dispatch(addFavorite(technology));
-  };
+  }, [dispatch, navigate, user, technology]);
 
-  const handleAddToQueue = () => {
-    if (!requireLogin()) return;
-
+  const handleAddToQueue = useCallback(() => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
     dispatch(addToQueue(technology));
-  };
+  }, [dispatch, navigate, user, technology]);
 
-  const handleDelete = () => {
-    if (!requireLogin()) return;
-
+  const handleDelete = useCallback(() => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
     onDelete(technology.id);
-  };
+  }, [user, navigate, onDelete, technology.id]);
 
   return (
     <div className="card">

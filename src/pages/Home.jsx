@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import api from "../services/api";
 import TechCard from "../components/TechCard";
@@ -6,8 +6,16 @@ import TechCard from "../components/TechCard";
 function Home() {
   const [featured, setFeatured] = useState([]);
   const [loading, setLoading] = useState(true);
-  const user = JSON.parse(localStorage.getItem("user"));
-  const learningQueue = useSelector((state) => state.learning);
+  const [user] = useState(() => JSON.parse(localStorage.getItem("user")));
+
+  const learningQueueIds = useSelector(
+    (state) => state.learning.map((tech) => tech.id)
+  );
+
+  const queueIdSet = useMemo(
+    () => new Set(learningQueueIds),
+    [learningQueueIds]
+  );
 
   useEffect(() => {
     const controller = new AbortController();
@@ -35,12 +43,7 @@ function Home() {
     return () => controller.abort();
   }, []);
 
-  // Dummy delete function so TechCard doesn't break
-  async function deleteTechnology(id) {
-    // Usually you don't delete from the featured list on home page, 
-    // but passing an empty function works.
-    console.log("Delete from home page clicked for", id);
-  }
+  const deleteTechnology = useCallback(() => {}, []);
 
   if (loading) {
     return <h2>Loading featured technologies...</h2>;
@@ -63,7 +66,7 @@ function Home() {
             technology={technology} 
             onDelete={deleteTechnology}
             user={user}
-            isInQueue={learningQueue.some((tech) => tech.id === technology.id)}
+            isInQueue={queueIdSet.has(technology.id)}
           />
         ))}
       </div>
