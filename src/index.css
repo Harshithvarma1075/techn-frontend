@@ -228,6 +228,12 @@ main > p {
   background: var(--accent);
 }
 
+.auth-card button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .edit-btn:hover,
 .favorite-btn:hover,
 .queue-btn:hover,
