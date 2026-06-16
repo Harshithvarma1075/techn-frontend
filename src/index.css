@@ -1,28 +1,82 @@
+/* ============================================================
+   IMPORT FONT
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* ============================================================
+   RESET
+   ============================================================ */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
 :root {
-  --bg: #f8fafc;
-  --surface: #ffffff;
-  --surface-soft: #f1f5f9;
-  --text: #0f172a;
-  --muted: #64748b;
-  --brand: #14b8a6;
-  --brand-dark: #0f172a;
-  --accent: #0d9488;
-  --danger: #dc2626;
-  --border: #e2e8f0;
-  --shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+  /* Core palette */
+  --bg:             #0b0f1a;
+  --bg-secondary:   #0f1628;
+  --surface:        #131929;
+  --surface-raised: #1a2236;
+  --surface-hover:  #1f2a42;
+  --text:           #e8edf5;
+  --text-dim:       #a8b4cc;
+  --muted:          #6b7fa3;
+
+  /* Brand — teal → cyan */
+  --brand:          #0dd9c4;
+  --brand-mid:      #06b6d4;
+  --brand-dark:     #0891b2;
+  --brand-glow:     rgba(13, 217, 196, 0.25);
+  --brand-subtle:   rgba(13, 217, 196, 0.10);
+
+  /* Accent — violet */
+  --accent:         #7c3aed;
+  --accent-light:   #a78bfa;
+  --accent-subtle:  rgba(124, 58, 237, 0.15);
+
+  /* Status */
+  --success:        #10b981;
+  --success-subtle: rgba(16, 185, 129, 0.12);
+  --danger:         #f43f5e;
+  --danger-subtle:  rgba(244, 63, 94, 0.12);
+  --warning:        #f59e0b;
+
+  /* Borders */
+  --border:         rgba(255, 255, 255, 0.07);
+  --border-brand:   rgba(13, 217, 196, 0.30);
+
+  /* Shadows */
+  --shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.40);
+  --shadow:         0 8px 32px rgba(0, 0, 0, 0.50);
+  --shadow-lg:      0 20px 60px rgba(0, 0, 0, 0.60);
+  --glow:           0 0 24px rgba(13, 217, 196, 0.20);
+
+  /* Gradients */
+  --grad-brand:     linear-gradient(135deg, #0dd9c4 0%, #06b6d4 50%, #0ea5e9 100%);
+  --grad-accent:    linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+  --grad-danger:    linear-gradient(135deg, #f43f5e 0%, #fb7185 100%);
+  --grad-surface:   linear-gradient(145deg, #1a2236 0%, #131929 100%);
+  --grad-card:      linear-gradient(145deg, rgba(26,34,54,0.98) 0%, rgba(19,25,41,0.95) 100%);
+  --grad-bg:        radial-gradient(ellipse at 20% 0%, rgba(13,217,196,0.06) 0%, transparent 50%),
+                    radial-gradient(ellipse at 80% 100%, rgba(124,58,237,0.06) 0%, transparent 50%),
+                    #0b0f1a;
 }
 
+/* ============================================================
+   BASE
+   ============================================================ */
 body {
-  font-family: Arial, sans-serif;
-  background: var(--bg);
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--grad-bg);
+  background-attachment: fixed;
   color: var(--text);
   min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
@@ -30,83 +84,130 @@ a {
   text-decoration: none;
 }
 
+h1 {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 800;
+  background: var(--grad-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+h2 {
+  color: var(--brand);
+  font-weight: 700;
+}
+
+main > p {
+  color: var(--text-dim);
+  line-height: 1.8;
+  max-width: 680px;
+  font-size: 1.05rem;
+}
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
 nav {
-  background: var(--brand-dark);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  background: rgba(11, 15, 26, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 0 rgba(13, 217, 196, 0.08), var(--shadow-sm);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 22px;
-  padding: 16px 6%;
+  padding: 0 6%;
+  height: 66px;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 100;
 }
 
 .brand {
-  color: #ffffff;
-  font-size: 24px;
-  font-weight: 800;
+  font-size: 1.5rem;
+  font-weight: 900;
+  background: var(--grad-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
   white-space: nowrap;
+  position: relative;
+}
+
+.brand::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--grad-brand);
+  border-radius: 99px;
+  opacity: 0.6;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 4px;
   flex-wrap: wrap;
 }
 
 .nav-links a {
-  color: #cbd5e1;
+  color: var(--text-dim);
   border-radius: 8px;
-  font-size: 15px;
+  font-size: 0.9rem;
   font-weight: 600;
-  padding: 9px 12px;
-  transition: background 0.2s, color 0.2s;
+  padding: 8px 14px;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  position: relative;
 }
 
 .nav-links a:hover {
-  background: rgba(20, 184, 166, 0.14);
-  color: #ffffff;
+  background: var(--brand-subtle);
+  color: var(--brand);
+  box-shadow: 0 0 12px var(--brand-glow);
 }
 
+/* ============================================================
+   MAIN LAYOUT
+   ============================================================ */
 main {
   width: 90%;
-  max-width: 1180px;
-  margin: 34px auto 56px;
+  max-width: 1200px;
+  margin: 40px auto 72px;
 }
 
-h1 {
-  color: var(--brand-dark);
-  margin-bottom: 12px;
-}
-
-h2 {
-  color: var(--brand);
-}
-
-main > p {
-  color: var(--muted);
-  line-height: 1.7;
-  max-width: 680px;
-}
-
+/* ============================================================
+   GRID LAYOUTS
+   ============================================================ */
 .technologies,
 .favorites-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 22px;
-  margin-top: 22px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
 }
 
+/* ============================================================
+   FILTER BAR
+   ============================================================ */
 .filters {
   display: flex;
-  gap: 15px;
+  gap: 12px;
   flex-wrap: wrap;
-  margin: 18px 0;
+  margin: 20px 0;
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
 }
 
 .filters input,
@@ -114,55 +215,108 @@ main > p {
   flex: 1 1 190px;
 }
 
+/* ============================================================
+   CARDS — Base
+   ============================================================ */
 .card,
 .favorite-card,
 .details,
 .auth-card,
 .form-container form,
 .kanban-column {
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid rgba(221, 214, 200, 0.9);
-  border-radius: 12px;
+  background: var(--grad-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
   box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
 }
 
+/* Shimmer top-edge highlight */
+.card::before,
+.favorite-card::before,
+.kanban-column::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(13,217,196,0.5) 50%, transparent 100%);
+}
+
+/* ============================================================
+   CARDS — Tech Card
+   ============================================================ */
 .card,
 .favorite-card {
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.3s ease,
+              border-color 0.3s ease;
 }
 
 .card:hover,
 .favorite-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+  transform: translateY(-6px) scale(1.01);
+  border-color: var(--border-brand);
+  box-shadow: var(--shadow-lg), var(--glow);
 }
 
 .card img,
 .favorite-card img {
   width: 100%;
-  height: 205px;
+  height: 210px;
   object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.card:hover img {
+  transform: scale(1.04);
+}
+
+/* Image overlay gradient */
+.card .card-img-wrapper,
+.favorite-card .card-img-wrapper {
+  position: relative;
+  overflow: hidden;
 }
 
 .card h3 {
-  color: var(--brand-dark);
-  font-size: 21px;
+  color: var(--text);
+  font-size: 1.15rem;
+  font-weight: 700;
   padding: 16px 18px 6px;
+  letter-spacing: -0.2px;
 }
 
 .card p {
   color: var(--muted);
   padding: 3px 18px;
+  font-size: 0.875rem;
+}
+
+/* Rating badge */
+.card p:last-of-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--warning);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 4px 18px 12px;
 }
 
 .card-actions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 9px;
-  padding: 16px 18px 18px;
+  gap: 8px;
+  padding: 12px 16px 18px;
 }
 
+/* ============================================================
+   BUTTONS — Base
+   ============================================================ */
 .view-btn,
 .edit-btn,
 .delete-btn,
@@ -175,141 +329,205 @@ main > p {
 .kanban-actions button,
 .auth-card button {
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
   font-weight: 700;
+  letter-spacing: 0.3px;
   line-height: 1.2;
-  padding: 11px 13px;
+  padding: 10px 14px;
   text-align: center;
-  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
 }
 
+/* Ripple shimmer on hover */
+.view-btn::after,
+.submit-btn::after,
+.auth-card button::after,
+.add-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.10) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.view-btn:hover::after,
+.submit-btn:hover::after,
+.auth-card button:hover::after,
+.add-btn:hover::after {
+  transform: translateX(100%);
+}
+
+/* ============================================================
+   BUTTONS — Variants
+   ============================================================ */
+
+/* Primary — Gradient teal */
 .view-btn,
 .submit-btn,
 .auth-card button {
-  background: var(--brand);
-  color: white;
-}
-
-.edit-btn,
-.favorite-btn,
-.queue-btn,
-.add-btn {
-  background: #f0fdfa;
-  border-color: #99f6e4;
-  color: var(--brand-dark);
-}
-
-.delete-btn,
-.clear-btn,
-.favorite-content button,
-.kanban-actions button {
-  background: #fef2f2;
-  border-color: #fecaca;
-  color: #b91c1c;
-}
-
-.favorite-btn,
-.queue-btn {
-  grid-column: span 2;
-}
-
-.queue-btn:disabled {
-  background: #edf0ec;
-  border-color: #d4d9d2;
-  color: #7b847f;
-  cursor: not-allowed;
+  background: var(--grad-brand);
+  color: #0b0f1a;
+  font-weight: 800;
+  box-shadow: 0 4px 15px rgba(13, 217, 196, 0.30);
 }
 
 .view-btn:hover,
 .submit-btn:hover,
 .auth-card button:hover {
-  background: var(--accent);
+  box-shadow: 0 6px 22px rgba(13, 217, 196, 0.50);
+  transform: translateY(-2px);
+  filter: brightness(1.08);
 }
 
-.auth-card button:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-  transform: none;
+/* Secondary — Subtle teal outline */
+.edit-btn,
+.favorite-btn,
+.queue-btn,
+.add-btn {
+  background: var(--brand-subtle);
+  border-color: var(--border-brand);
+  color: var(--brand);
 }
 
 .edit-btn:hover,
 .favorite-btn:hover,
-.queue-btn:hover,
+.queue-btn:not(:disabled):hover,
 .add-btn:hover {
-  background: #ccfbf1;
+  background: rgba(13, 217, 196, 0.18);
+  box-shadow: 0 4px 14px rgba(13, 217, 196, 0.20);
+  transform: translateY(-2px);
+}
+
+/* Danger — Subtle red */
+.delete-btn,
+.clear-btn,
+.favorite-content button,
+.kanban-actions button {
+  background: var(--danger-subtle);
+  border-color: rgba(244, 63, 94, 0.30);
+  color: #fb7185;
 }
 
 .delete-btn:hover,
 .clear-btn:hover,
 .favorite-content button:hover,
 .kanban-actions button:hover {
-  background: #fee2e2;
+  background: rgba(244, 63, 94, 0.20);
+  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.20);
+  transform: translateY(-2px);
 }
 
-.view-btn:hover,
-.edit-btn:hover,
-.delete-btn:hover,
-.favorite-btn:hover,
-.queue-btn:hover,
-.add-btn:hover,
-.submit-btn:hover,
-.clear-btn:hover {
-  transform: translateY(-1px);
+/* Spanning buttons */
+.favorite-btn,
+.queue-btn {
+  grid-column: span 2;
 }
 
+/* Disabled */
+.queue-btn:disabled {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  filter: none;
+}
+
+.auth-card button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  filter: none;
+}
+
+/* Add Button — Standalone */
 .add-btn {
   display: inline-flex;
-  margin: 0 0 2px;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 4px;
+  padding: 10px 20px;
 }
 
+/* ============================================================
+   TECH DETAILS PAGE
+   ============================================================ */
 .details {
-  padding: 28px;
+  padding: 32px;
+  overflow: visible;
 }
 
 .details img {
   width: 100%;
-  max-height: 430px;
+  max-height: 420px;
   object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 22px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
 }
 
 .details h3 {
-  color: var(--accent);
-  margin-top: 18px;
+  color: var(--brand);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-top: 22px;
+  padding: 4px 10px;
+  background: var(--brand-subtle);
+  border-left: 3px solid var(--brand);
+  border-radius: 0 6px 6px 0;
+  display: inline-block;
 }
 
 .details p {
-  color: var(--muted);
-  line-height: 1.7;
-  margin-top: 6px;
+  color: var(--text-dim);
+  line-height: 1.75;
+  margin-top: 8px;
+  font-size: 1rem;
 }
 
 .details ul {
-  color: var(--muted);
+  color: var(--text-dim);
   margin-top: 10px;
   padding-left: 20px;
+  list-style: none;
 }
 
 .details li {
   margin-bottom: 8px;
+  padding: 6px 12px;
+  background: var(--surface-raised);
+  border-radius: 8px;
+  border-left: 2px solid var(--brand-dark);
+  font-size: 0.9rem;
 }
 
+/* ============================================================
+   FORMS — Auth + Add/Edit
+   ============================================================ */
 .form-container,
 .auth-container {
-  min-height: 70vh;
+  min-height: 75vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 24px 0;
 }
 
 .form-container form,
 .auth-card {
   width: 100%;
   max-width: 480px;
-  padding: 34px;
+  padding: 40px;
 }
 
 .form-container form {
@@ -317,33 +535,59 @@ main > p {
   gap: 16px;
 }
 
-.auth-card h1 {
-  text-align: center;
-  margin-bottom: 24px;
+.auth-card {
+  position: relative;
 }
 
+/* Gradient border via pseudo */
+.auth-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 17px;
+  background: linear-gradient(135deg, rgba(13,217,196,0.4) 0%, rgba(124,58,237,0.3) 100%);
+  z-index: -1;
+}
+
+.auth-card h1 {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+/* ============================================================
+   FORM MESSAGES
+   ============================================================ */
 .form-message {
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 10px;
+  font-size: 0.875rem;
   font-weight: 600;
   line-height: 1.5;
   margin-bottom: 16px;
-  padding: 11px 13px;
+  padding: 12px 16px;
   text-align: center;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .form-message.success {
-  background: #f0fdfa;
-  border: 1px solid #99f6e4;
-  color: #0f766e;
+  background: var(--success-subtle);
+  border: 1px solid rgba(16, 185, 129, 0.30);
+  color: #34d399;
 }
 
 .form-message.error {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #b91c1c;
+  background: var(--danger-subtle);
+  border: 1px solid rgba(244, 63, 94, 0.30);
+  color: #fb7185;
 }
 
+/* ============================================================
+   INPUTS & SELECTS
+   ============================================================ */
 .form-container input,
 .form-container textarea,
 .auth-card input,
@@ -351,14 +595,20 @@ main > p {
 .filters select,
 .kanban-actions select {
   width: 100%;
-  background: #ffffff;
+  background: var(--surface-raised);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
   color: var(--text);
-  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
   outline: none;
-  padding: 12px 13px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 13px 15px;
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+}
+
+.form-container input::placeholder,
+.auth-card input::placeholder {
+  color: var(--muted);
 }
 
 .form-container textarea {
@@ -367,7 +617,7 @@ main > p {
 }
 
 .auth-card input {
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .form-container input:focus,
@@ -377,80 +627,124 @@ main > p {
 .filters select:focus,
 .kanban-actions select:focus {
   border-color: var(--brand);
-  box-shadow: 0 0 0 3px rgba(24, 76, 79, 0.12);
+  box-shadow: 0 0 0 3px var(--brand-glow);
+  background: var(--surface-hover);
 }
 
+.filters select,
+.kanban-actions select {
+  cursor: pointer;
+  color: var(--text-dim);
+  appearance: auto;
+}
+
+.filters select option,
+.kanban-actions select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* ============================================================
+   FAVORITES PAGE
+   ============================================================ */
 .favorites-container,
 .learning-queue-container {
   min-height: 75vh;
 }
 
 .page-title {
-  color: var(--brand-dark);
   text-align: center;
-  margin-bottom: 26px;
+  margin-bottom: 30px;
 }
 
 .favorite-content {
-  padding: 18px;
+  padding: 20px;
 }
 
 .favorite-content h2 {
+  font-size: 1.05rem;
   margin-bottom: 10px;
+  color: var(--text);
 }
 
 .favorite-content p {
   color: var(--muted);
-  margin: 8px 0;
+  margin: 6px 0;
+  font-size: 0.875rem;
 }
 
 .favorite-content button {
   width: 100%;
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .empty-favorites {
   color: var(--muted);
   text-align: center;
-  margin-top: 80px;
+  margin-top: 100px;
+}
+
+.empty-favorites h2 {
+  color: var(--text-dim);
+  margin-bottom: 10px;
 }
 
 .clear-btn {
   display: block;
-  margin: 0 auto 22px;
+  margin: 0 auto 24px;
+  padding: 10px 28px;
 }
 
+/* ============================================================
+   KANBAN BOARD
+   ============================================================ */
 .kanban-board {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  gap: 20px;
   align-items: flex-start;
 }
 
 .kanban-column {
-  min-height: 360px;
-  padding: 16px;
+  min-height: 380px;
+  padding: 20px;
+  border-radius: 16px;
 }
+
+/* Color-coded column headers */
+.kanban-column:nth-child(1) { border-top: 3px solid #f59e0b; }
+.kanban-column:nth-child(2) { border-top: 3px solid var(--brand); }
+.kanban-column:nth-child(3) { border-top: 3px solid var(--success); }
 
 .kanban-column h2 {
   border-bottom: 1px solid var(--border);
-  font-size: 19px;
-  padding-bottom: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  padding-bottom: 14px;
   text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
 }
 
 .kanban-items {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  margin-top: 15px;
+  margin-top: 16px;
 }
 
 .kanban-card {
-  background: #ffffff;
+  background: var(--surface-raised);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px;
+  border-radius: 12px;
+  padding: 14px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.kanban-card:hover {
+  border-color: var(--border-brand);
+  transform: translateY(-2px);
 }
 
 .kanban-card img {
@@ -461,12 +755,14 @@ main > p {
 }
 
 .kanban-card h3 {
-  margin: 10px 0 5px;
+  margin: 10px 0 4px;
+  font-size: 0.95rem;
+  color: var(--text);
 }
 
 .kanban-card p {
   color: var(--muted);
-  font-size: 14px;
+  font-size: 0.8rem;
   margin-bottom: 10px;
 }
 
@@ -475,11 +771,71 @@ main > p {
   gap: 8px;
 }
 
+.kanban-actions select {
+  padding: 8px 10px;
+  font-size: 0.82rem;
+  border-radius: 8px;
+}
+
+/* ============================================================
+   HOME PAGE HERO
+   ============================================================ */
+.home-hero {
+  text-align: left;
+  padding: 40px 0 28px;
+}
+
+.home-hero p {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  margin-top: 8px;
+}
+
+.section-heading {
+  margin-top: 48px;
+  margin-bottom: 6px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--surface-hover);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-dark);
+}
+
+/* ============================================================
+   RESPONSIVE — Tablet
+   ============================================================ */
 @media (max-width: 820px) {
   nav {
+    height: auto;
     align-items: flex-start;
     flex-direction: column;
-    padding: 15px 5%;
+    padding: 16px 5%;
+    gap: 12px;
   }
 
   .nav-links {
@@ -488,32 +844,41 @@ main > p {
   }
 
   .nav-links a {
-    padding: 8px 10px;
+    padding: 8px 12px;
   }
 
   main {
     width: 92%;
-    margin-top: 24px;
+    margin-top: 28px;
   }
 
   .kanban-board {
     grid-template-columns: 1fr;
   }
+
+  .form-container form,
+  .auth-card {
+    padding: 32px;
+  }
 }
 
+/* ============================================================
+   RESPONSIVE — Mobile
+   ============================================================ */
 @media (max-width: 520px) {
   .brand {
-    font-size: 22px;
+    font-size: 1.3rem;
   }
 
   .nav-links {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
   }
 
   .nav-links a {
-    background: rgba(255, 255, 255, 0.08);
     text-align: center;
+    background: rgba(255, 255, 255, 0.04);
   }
 
   .technologies,
@@ -523,6 +888,7 @@ main > p {
 
   .filters {
     gap: 10px;
+    padding: 14px;
   }
 
   .card-actions {
@@ -537,10 +903,10 @@ main > p {
   .form-container form,
   .auth-card,
   .details {
-    padding: 22px;
+    padding: 24px;
   }
 
   .details img {
-    max-height: 260px;
+    max-height: 240px;
   }
 }
