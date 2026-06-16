@@ -1,19 +1,40 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addFavorite } from "../features/favouriteSlice";
 import { addToQueue } from "../features/learningSlice";
 
 function TechCard({ technology, onDelete }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const learningQueue = useSelector((state) => state.learning);
   const isInQueue = learningQueue.some((tech) => tech.id === technology.id);
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const requireLogin = () => {
+    if (!user) {
+      navigate("/login");
+      return false;
+    }
+
+    return true;
+  };
 
   const handleFavorite = () => {
+    if (!requireLogin()) return;
+
     dispatch(addFavorite(technology));
   };
 
   const handleAddToQueue = () => {
+    if (!requireLogin()) return;
+
     dispatch(addToQueue(technology));
+  };
+
+  const handleDelete = () => {
+    if (!requireLogin()) return;
+
+    onDelete(technology.id);
   };
 
   return (
@@ -31,7 +52,10 @@ function TechCard({ technology, onDelete }) {
           View
         </Link>
 
-        <Link className="edit-btn" to={`/edit-technology/${technology.id}`}>
+        <Link
+          className="edit-btn"
+          to={user ? `/edit-technology/${technology.id}` : "/login"}
+        >
           Edit
         </Link>
 
@@ -47,7 +71,7 @@ function TechCard({ technology, onDelete }) {
           {isInQueue ? "In Queue" : "Add To Learn"}
         </button>
 
-        <button className="delete-btn" onClick={() => onDelete(technology.id)}>
+        <button className="delete-btn" onClick={handleDelete}>
           Delete
         </button>
       </div>

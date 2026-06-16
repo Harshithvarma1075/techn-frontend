@@ -13,8 +13,13 @@ function Navbar() {
       <div className="nav-links">
         <Link to="/">Home</Link>
         <Link to="/technologies">Technologies</Link>
-        <Link to="/favorites">Favorites ({favorites.length})</Link>
-        <Link to="/learning-queue">Learning Queue ({learningQueue.length})</Link>
+
+        {user && (
+          <>
+            <Link to="/favorites">Favorites ({favorites.length})</Link>
+            <Link to="/learning-queue">Learning Queue ({learningQueue.length})</Link>
+          </>
+        )}
 
         {!user && (
           <>

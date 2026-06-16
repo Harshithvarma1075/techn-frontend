@@ -9,6 +9,7 @@ function Technologies() {
   const [category, setCategory] = useState("All");
   const [level, setLevel] = useState("All");
   const [sort, setSort] = useState("");
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     async function getTechnologies() {
@@ -102,7 +103,7 @@ function Technologies() {
         </select>
       </div>
 
-      <Link to="/add-technology" className="add-btn">
+      <Link to={user ? "/add-technology" : "/login"} className="add-btn">
         Add Technology
       </Link>
 

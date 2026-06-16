@@ -10,6 +10,7 @@ import Login from "../pages/Login";
 import Logout from "../pages/Logout";
 import Favorites from "../pages/Favorites";
 import LearningQueue from "../pages/LearningQueue";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 function AppRoutes() {
   return (
@@ -19,14 +20,42 @@ function AppRoutes() {
       <Route path="/technologies" element={<Technologies />} />
 
       <Route path="/technologies/:id" element={<TechDetails />} />
-      <Route path="/add-technology" element={<AddTechnology />} />
-      <Route path="/edit-technology/:id" element={<EditTechnology />} />
+      <Route
+        path="/add-technology"
+        element={
+          <ProtectedRoute>
+            <AddTechnology />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/edit-technology/:id"
+        element={
+          <ProtectedRoute>
+            <EditTechnology />
+          </ProtectedRoute>
+        }
+      />
 
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/logout" element={<Logout />} />
-      <Route path="/favorites" element={<Favorites />} />
-      <Route path="/learning-queue" element={<LearningQueue />} />
+      <Route
+        path="/favorites"
+        element={
+          <ProtectedRoute>
+            <Favorites />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/learning-queue"
+        element={
+          <ProtectedRoute>
+            <LearningQueue />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }
