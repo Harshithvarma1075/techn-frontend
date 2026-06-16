@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
+import { useSelector } from "react-redux";
 import api from "../services/api";
 import TechCard from "../components/TechCard";
 import { Link } from "react-router-dom";
@@ -22,6 +23,7 @@ function Technologies() {
   const [sort, setSort] = useState("");
   const [loading, setLoading] = useState(true);
   const user = JSON.parse(localStorage.getItem("user"));
+  const learningQueue = useSelector((state) => state.learning);
 
   const debouncedSearch = useDebounce(search, 300);
 
@@ -138,7 +140,13 @@ function Technologies() {
           <h2>Loading technologies...</h2>
         ) : (
           finalTechnologies.map((technology) => (
-            <TechCard key={technology.id} technology={technology} onDelete={deleteTechnology} />
+            <TechCard
+              key={technology.id}
+              technology={technology}
+              onDelete={deleteTechnology}
+              user={user}
+              isInQueue={learningQueue.some((tech) => tech.id === technology.id)}
+            />
           ))
         )}
       </div>

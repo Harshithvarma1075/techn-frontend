@@ -200,3 +200,12 @@
     gap:10px;
   }
 }
+
+.technologies {
+  contain: layout style;
+}
+
+.card {
+  contain: layout style paint;
+  will-change: transform;
+}

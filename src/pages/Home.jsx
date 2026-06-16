@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import api from "../services/api";
 import TechCard from "../components/TechCard";
 
 function Home() {
   const [featured, setFeatured] = useState([]);
   const [loading, setLoading] = useState(true);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const learningQueue = useSelector((state) => state.learning);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -58,7 +61,9 @@ function Home() {
           <TechCard 
             key={technology.id} 
             technology={technology} 
-            onDelete={deleteTechnology} 
+            onDelete={deleteTechnology}
+            user={user}
+            isInQueue={learningQueue.some((tech) => tech.id === technology.id)}
           />
         ))}
       </div>

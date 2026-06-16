@@ -1,14 +1,12 @@
+import { memo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addFavorite } from "../features/favouriteSlice";
 import { addToQueue } from "../features/learningSlice";
 
-function TechCard({ technology, onDelete }) {
+const TechCard = memo(function TechCard({ technology, onDelete, user, isInQueue }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const learningQueue = useSelector((state) => state.learning);
-  const isInQueue = learningQueue.some((tech) => tech.id === technology.id);
-  const user = JSON.parse(localStorage.getItem("user"));
 
   const requireLogin = () => {
     if (!user) {
@@ -77,6 +75,6 @@ function TechCard({ technology, onDelete }) {
       </div>
     </div>
   );
-}
+});
 
 export default TechCard;
