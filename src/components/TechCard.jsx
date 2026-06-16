@@ -39,7 +39,7 @@ function TechCard({ technology, onDelete }) {
 
   return (
     <div className="card">
-      <img src={technology.image} alt={technology.name} />
+      <img src={technology.image} alt={technology.name} loading="lazy" />
 
       <h3>{technology.name}</h3>
 

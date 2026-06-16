@@ -37,7 +37,6 @@ function Login() {
 
                 setTimeout(() => {
                     navigate("/");
-                    window.location.reload();
                 }, 800);
             } else {
                 setMessage({ type: "error", text: "Invalid email or password. Please try again." });

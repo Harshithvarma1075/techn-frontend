@@ -1,7 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import api from "../services/api";
 import TechCard from "../components/TechCard";
 import { Link } from "react-router-dom";
+
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
 
 function Technologies() {
   const [technologies, setTechnologies] = useState([]);
@@ -9,20 +20,32 @@ function Technologies() {
   const [category, setCategory] = useState("All");
   const [level, setLevel] = useState("All");
   const [sort, setSort] = useState("");
+  const [loading, setLoading] = useState(true);
   const user = JSON.parse(localStorage.getItem("user"));
 
+  const debouncedSearch = useDebounce(search, 300);
+
   useEffect(() => {
+    const controller = new AbortController();
+
     async function getTechnologies() {
       try {
-        const response = await api.get("/technologies");
+        const response = await api.get("/technologies", {
+          signal: controller.signal,
+        });
 
         setTechnologies(response.data);
       } catch (error) {
-        console.log(error);
+        if (error.name !== "CanceledError") {
+          console.log(error);
+        }
+      } finally {
+        setLoading(false);
       }
     }
 
     getTechnologies();
+    return () => controller.abort();
   }, []);
 
   async function deleteTechnology(id){
@@ -42,22 +65,25 @@ function Technologies() {
 
 }
 
-  const filteredTechnologies = technologies.filter(technology => {
-    const searchMatch = technology.name.toLowerCase().includes(search.toLowerCase());
-    const categoryMatch = category === "All" || technology.category === category;
-    const levelMatch = level === "All" || technology.level === level;
-    return searchMatch && categoryMatch && levelMatch;
-  });
+  const filteredTechnologies = useMemo(() => {
+    return technologies.filter(technology => {
+      const searchMatch = technology.name.toLowerCase().includes(debouncedSearch.toLowerCase());
+      const categoryMatch = category === "All" || technology.category === category;
+      const levelMatch = level === "All" || technology.level === level;
+      return searchMatch && categoryMatch && levelMatch;
+    });
+  }, [technologies, debouncedSearch, category, level]);
 
-  let finalTechnologies = [...filteredTechnologies];
-
-  if (sort === "high") {
-    finalTechnologies.sort((a, b) => b.rating - a.rating);
-  }
-
-  if (sort === "low") {
-    finalTechnologies.sort((a, b) => a.rating - b.rating);
-  }
+  const finalTechnologies = useMemo(() => {
+    const sorted = [...filteredTechnologies];
+    if (sort === "high") {
+      sorted.sort((a, b) => b.rating - a.rating);
+    }
+    if (sort === "low") {
+      sorted.sort((a, b) => a.rating - b.rating);
+    }
+    return sorted;
+  }, [filteredTechnologies, sort]);
 
   return (
     <>
@@ -108,9 +134,13 @@ function Technologies() {
       </Link>
 
       <div className="technologies">
-        {finalTechnologies.map((technology) => (
-          <TechCard key={technology.id} technology={technology} onDelete={deleteTechnology} />
-        ))}
+        {loading ? (
+          <h2>Loading technologies...</h2>
+        ) : (
+          finalTechnologies.map((technology) => (
+            <TechCard key={technology.id} technology={technology} onDelete={deleteTechnology} />
+          ))
+        )}
       </div>
     </>
   );

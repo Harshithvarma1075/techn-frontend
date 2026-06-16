@@ -9,18 +9,25 @@ function TechDetails() {
     useState(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function getTechnology() {
       try {
         const response =
-          await api.get(`/technologies/${id}`);
+          await api.get(`/technologies/${id}`, {
+            signal: controller.signal,
+          });
 
         setTechnology(response.data);
       } catch (error) {
-        console.log(error);
+        if (error.name !== "CanceledError") {
+          console.log(error);
+        }
       }
     }
 
     getTechnology();
+    return () => controller.abort();
   }, [id]);
 
   if (!technology) {
@@ -32,6 +39,7 @@ function TechDetails() {
       <img
         src={technology.image}
         alt={technology.name}
+        loading="lazy"
       />
 
       <h1>{technology.name}</h1>

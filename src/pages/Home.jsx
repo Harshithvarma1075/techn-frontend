@@ -4,23 +4,32 @@ import TechCard from "../components/TechCard";
 
 function Home() {
   const [featured, setFeatured] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function getFeaturedTech() {
       try {
-        const response = await api.get("/technologies");
+        const response = await api.get("/technologies", {
+          signal: controller.signal,
+        });
 
-        // Sort by rating descending and take top 3
         const sorted = response.data.sort((a, b) => b.rating - a.rating);
         const top3 = sorted.slice(0, 3);
 
         setFeatured(top3);
       } catch (error) {
-        console.log(error);
+        if (error.name !== "CanceledError") {
+          console.log(error);
+        }
+      } finally {
+        setLoading(false);
       }
     }
 
     getFeaturedTech();
+    return () => controller.abort();
   }, []);
 
   // Dummy delete function so TechCard doesn't break
@@ -28,6 +37,10 @@ function Home() {
     // Usually you don't delete from the featured list on home page, 
     // but passing an empty function works.
     console.log("Delete from home page clicked for", id);
+  }
+
+  if (loading) {
+    return <h2>Loading featured technologies...</h2>;
   }
 
   return (

@@ -16,19 +16,31 @@ function EditTechnology(){
     description:""
   });
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(()=>{
+    const controller = new AbortController();
+
     async function getTechnology(){
+      try {
+        const response =
+        await api.get(
+          `/technologies/${id}`,
+          { signal: controller.signal }
+        );
 
-      const response =
-      await api.get(
-        `/technologies/${id}`
-      );
-
-      setFormData(response.data);
-
+        setFormData(response.data);
+      } catch (error) {
+        if (error.name !== "CanceledError") {
+          console.log(error);
+        }
+      } finally {
+        setLoading(false);
+      }
     }
 
     getTechnology();
+    return () => controller.abort();
 
   },[id]);
 
@@ -52,6 +64,10 @@ function EditTechnology(){
 
     navigate("/technologies");
 
+  }
+
+  if (loading) {
+    return <h2>Loading technology...</h2>;
   }
 
   return(
