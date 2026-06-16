@@ -316,6 +316,28 @@ main > p {
   margin-bottom: 24px;
 }
 
+.form-message {
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  padding: 11px 13px;
+  text-align: center;
+}
+
+.form-message.success {
+  background: #f0fdfa;
+  border: 1px solid #99f6e4;
+  color: #0f766e;
+}
+
+.form-message.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
 .form-container input,
 .form-container textarea,
 .auth-card input,

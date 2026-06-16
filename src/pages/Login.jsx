@@ -1,43 +1,67 @@
 import { useState } from "react";
-import api from "../services/api";
 import { useNavigate } from "react-router-dom";
+import { getRegisteredUsers } from "../utils/auth";
 
 function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [message, setMessage] = useState({ type: "", text: "" });
 
-    async function handleSubmit(e) {
+    function handleSubmit(e) {
         e.preventDefault();
 
-        const response = await api.get(
-            `/users?email=${email}&password=${password}`
+        if (!email || !password) {
+            setMessage({ type: "error", text: "Please enter email and password." });
+            return;
+        }
+
+        const users = getRegisteredUsers();
+        const matchedUser = users.find(
+            user =>
+                user.email.toLowerCase() === email.toLowerCase() &&
+                user.password === password
         );
 
-        if (response.data.length > 0) {
+        if (matchedUser) {
             localStorage.setItem(
                 "user",
-                JSON.stringify(response.data[0])
+                JSON.stringify(matchedUser)
             );
-            navigate("/");
-            window.location.reload();
+
+            setMessage({ type: "success", text: "Login successful. Redirecting..." });
+
+            setTimeout(() => {
+                navigate("/");
+                window.location.reload();
+            }, 700);
         } else {
-            alert("Invalid Credentials");
+            setMessage({ type: "error", text: "Login failed. Check your credentials." });
         }
     }
 
     return (
         <div className='auth-container'>
             <div className='auth-card'>
+                <h1>Login</h1>
+
+                {message.text && (
+                    <p className={`form-message ${message.type}`}>
+                        {message.text}
+                    </p>
+                )}
+
                 <form onSubmit={handleSubmit}>
                     <input
                         type="email"
                         placeholder="Email"
+                        value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
                     <input
                         type="password"
                         placeholder="Password"
+                        value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <button>Login</button>
